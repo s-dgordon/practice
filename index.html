@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Práctica de los 16 tiempos verbales</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Sans', system-ui, sans-serif; padding: 32px 16px;
+  background: radial-gradient(140% 120% at 50% -10%, #243b6b 0%, #15213f 45%, #0a0f1f 100%);
+  color: #e8ecf6;
+}
+.wrap { max-width: 720px; width: 100%; }
+.head { text-align: center; margin-bottom: 30px; }
+.kicker {
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+  color: #b9c6ec; background: rgba(255,255,255,0.08); padding: 5px 14px; border-radius: 40px; margin-bottom: 16px;
+}
+h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 40px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.05; margin-bottom: 10px; }
+h1 .accent { font-style: italic; color: #f0c87a; }
+.lede { font-size: 15.5px; color: #aeb9d6; line-height: 1.6; max-width: 540px; margin: 0 auto; }
+.cards { display: flex; flex-direction: column; gap: 14px; }
+.exercise-card {
+  display: block; text-decoration: none; color: inherit; position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px;
+  padding: 22px 24px 22px 28px; transition: transform 0.18s, border-color 0.18s, background 0.18s;
+}
+.exercise-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--accent); }
+.exercise-card:hover { transform: translateY(-3px); border-color: var(--accent); background: rgba(255,255,255,0.08); }
+.card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.card-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--accent);
+  width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--accent); border-radius: 12px;
+}
+.card-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; line-height: 1.1; }
+.card-mode { font-size: 10.5px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 3px 9px; border-radius: 30px; }
+.card-desc { font-size: 14px; color: #b3bdda; line-height: 1.55; padding-left: 56px; }
+.card-go { position: absolute; right: 22px; top: 24px; font-size: 22px; color: var(--accent); transition: transform 0.18s; }
+.exercise-card:hover .card-go { transform: translateX(4px); }
+.foot { text-align: center; margin-top: 26px; font-size: 12.5px; color: #7d88a8; line-height: 1.6; }
+
+.c1 { --accent: #48b5a0; --accent-soft: rgba(72,181,160,0.16); }
+.c2 { --accent: #b07ce0; --accent-soft: rgba(176,124,224,0.16); }
+.c3 { --accent: #6cc28e; --accent-soft: rgba(108,194,142,0.16); }
+
+@media (max-width: 520px) {
+  h1 { font-size: 32px; }
+  .card-desc { padding-left: 0; margin-top: 4px; }
+  .card-go { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <span class="kicker">Espa&ntilde;ol &middot; gram&aacute;tica</span>
+    <h1>Practica los <span class="accent">16 tiempos verbales</span></h1>
+    <p class="lede">Tres ejercicios para reconocer, producir y dominar todo el sistema verbal del espa&ntilde;ol. Practica las veces que quieras. Cada uno te da una puntuaci&oacute;n y una lista para repasar al final.</p>
+  </div>
+
+  <div class="cards">
+    <a class="exercise-card c1" href="ejercicio-integrado-3.html" target="_blank" rel="noopener">
+      <div class="card-top">
+        <span class="card-num">3</span>
+        <span class="card-title">Reconoce la forma</span>
+        <span class="card-mode">con tiempo</span>
+      </div>
+      <p class="card-desc">Lee una oraci&oacute;n con un verbo subrayado, identifica entre las 16 formas cu&aacute;l es y traduce el verbo al ingl&eacute;s.</p>
+      <span class="card-go">&rarr;</span>
+    </a>
+
+    <a class="exercise-card c2" href="ejercicio-integrado-4.html" target="_blank" rel="noopener">
+      <div class="card-top">
+        <span class="card-num">4</span>
+        <span class="card-title">Produce la forma</span>
+        <span class="card-mode">autocorregible</span>
+      </div>
+      <p class="card-desc">Te damos un verbo y una forma (persona y tiempo). T&uacute; escribes la conjugaci&oacute;n correcta y el ejercicio te corrige al instante.</p>
+      <span class="card-go">&rarr;</span>
+    </a>
+
+    <a class="exercise-card c3" href="ejercicio-integrado-5.html" target="_blank" rel="noopener">
+      <div class="card-top">
+        <span class="card-num">5</span>
+        <span class="card-title">Tabla completa</span>
+        <span class="card-mode">autocorregible</span>
+      </div>
+      <p class="card-desc">Conjuga un verbo entero en las 16 formas para un mismo sujeto y descubre los patrones que conectan todos los tiempos.</p>
+      <span class="card-go">&rarr;</span>
+    </a>
+  </div>
+
+  <p class="foot">Consejo: empieza por el ejercicio 5 para ver el sistema completo, luego practica con el 4 y comprueba lo que reconoces con el 3.</p>
+</div>
+</body>
+</html>

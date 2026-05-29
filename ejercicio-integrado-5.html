@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejercicio Integrado 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh; display: flex; align-items: flex-start; justify-content: center;
+  font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif; padding: 24px 16px;
+  background: linear-gradient(180deg, #0c1f1a 0%, #103a2f 26%, #1d5e44 52%, #4f9e6a 76%, #e8c87a 100%);
+  overflow-x: hidden; position: relative;
+}
+
+.leaves { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.leaf { position: absolute; border-radius: 50% 0 50% 0; background: rgba(232,200,122,0.12); animation: drift linear infinite; }
+@keyframes drift {
+  0%   { transform: translateY(105vh) rotate(0deg) scale(0); opacity: 0; }
+  10%  { opacity: 1; } 90% { opacity: 1; }
+  100% { transform: translateY(-10vh) rotate(220deg) scale(1); opacity: 0; }
+}
+
+.card {
+  position: relative; z-index: 1; background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px; padding: 32px 28px; max-width: 660px; width: 100%;
+  box-shadow: 0 8px 40px rgba(8,30,20,0.30), 0 1px 3px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+  text-align: center; border: 1px solid rgba(255,255,255,0.35);
+}
+
+.logo-mark {
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 3px;
+  text-transform: uppercase; color: #047857; background: #d1fae5;
+  padding: 5px 14px; border-radius: 40px; margin-bottom: 14px;
+}
+h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 700; color: #0c1f1a; margin: 0 0 4px; letter-spacing: -0.5px; }
+.subtitle { color: #5c7a6c; font-size: 15px; margin: 0 0 22px; font-style: italic; font-family: 'Cormorant Garamond', serif; font-weight: 500; }
+
+.instructions {
+  text-align: left; background: linear-gradient(135deg, #f0fbf5, #fdf9ec);
+  border-radius: 14px; padding: 16px 20px; margin-bottom: 18px;
+  font-size: 14.5px; color: #2c4035; line-height: 1.55; border: 1px solid #d8ecdf;
+}
+.instructions p { margin: 0 0 8px; } .instructions p:last-child { margin: 0; }
+
+/* Selectors */
+.sel-block { text-align: left; margin-bottom: 16px; }
+.sel-label { font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #5c7a6c; margin: 0 0 6px 2px; }
+.pill-row { display: flex; gap: 7px; flex-wrap: wrap; }
+.pill {
+  border: 2px solid #cfe6d7; background: #fff; color: #36513f; border-radius: 30px;
+  padding: 6px 14px; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.15s;
+}
+.pill:hover { border-color: #6cbf8e; }
+.pill.active { border-color: #047857; background: #d1fae5; color: #047857; box-shadow: 0 0 0 3px rgba(4,120,87,0.12); }
+.pill.verb-pill { font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 15px; }
+
+.btn-start {
+  background: linear-gradient(135deg, #047857, #b45309); color: #fff; border: none; border-radius: 14px;
+  padding: 14px 40px; font-size: 17px; font-weight: 700; cursor: pointer; letter-spacing: 0.3px;
+  font-family: inherit; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 18px rgba(4,120,87,0.3); margin-top: 6px;
+}
+.btn-start:hover { transform: scale(1.03); box-shadow: 0 6px 24px rgba(4,120,87,0.4); }
+
+/* Play header */
+.play-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+.head-verb { text-align: left; }
+.head-verb .hv-inf { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: #0c1f1a; line-height: 1; }
+.head-verb .hv-gloss { font-size: 13px; font-style: italic; color: #8aa394; }
+.person-badge {
+  font-size: 14px; font-weight: 800; color: #047857; background: #d1fae5;
+  border: 2px solid #a7e0c0; border-radius: 12px; padding: 8px 14px; white-space: nowrap;
+}
+.head-note { font-size: 12px; color: #8aa394; text-align: left; margin: 0 0 14px; font-style: italic; }
+
+/* Sections + table rows */
+.section { margin-bottom: 14px; text-align: left; }
+.section-title {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+  margin: 0 0 6px 2px; display: flex; align-items: center; gap: 6px;
+}
+.st-base { color: #475569; } .st-simple { color: #047857; } .st-comp { color: #b45309; } .st-subj { color: #9d174d; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: 0.25; }
+
+.trow { display: grid; grid-template-columns: 168px 1fr; gap: 10px; align-items: center; margin-bottom: 7px; }
+.tlabel { font-size: 13px; font-weight: 700; color: #36513f; text-align: right; line-height: 1.2; }
+.tlabel small { display: block; font-size: 10px; font-weight: 600; color: #a3b5aa; }
+.tinput-wrap { position: relative; }
+.tinput {
+  width: 100%; font-family: 'Cormorant Garamond', serif; font-size: 19px; font-style: italic;
+  padding: 8px 12px; border-radius: 10px; border: 2px solid #cfe6d7; color: #0c1f1a; background: #fff;
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s; min-width: 0;
+}
+.tinput::placeholder { color: #c7dccf; }
+.tinput:focus { border-color: #047857; box-shadow: 0 0 0 3px rgba(4,120,87,0.12); }
+.tinput.given { background: #f1f5f3; color: #475569; font-style: normal; font-weight: 600; }
+.tinput.ok { border-color: #16a34a; background: #f0fdf4; color: #166534; }
+.tinput.accent { border-color: #d97706; background: #fffbeb; color: #92400e; }
+.tinput.bad { border-color: #dc2626; background: #fef2f2; color: #991b1b; }
+.tinput.revealed { border-color: #94a3b8; background: #f8fafc; color: #334155; font-style: normal; }
+.tinput.shake { animation: shake 0.35s; }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+.tflag {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; font-weight: 800; pointer-events: none;
+}
+.tflag.ok { color: #16a34a; } .tflag.accent { color: #d97706; } .tflag.bad { color: #dc2626; }
+.tcorrect {
+  grid-column: 2; font-size: 12px; font-weight: 700; color: #047857; margin-top: -3px; padding-left: 2px;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+}
+
+@media (max-width: 560px) {
+  .trow { grid-template-columns: 1fr; gap: 3px; }
+  .tlabel { text-align: left; } .tcorrect { grid-column: 1; }
+}
+
+/* Control bar */
+.control-bar { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 16px 0 4px; }
+.btn-ctrl {
+  border: none; border-radius: 12px; padding: 11px 22px; font-size: 14px; font-weight: 700;
+  font-family: inherit; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s, opacity 0.15s;
+}
+.btn-ctrl:disabled { opacity: 0.45; cursor: default; }
+.btn-primary { background: linear-gradient(135deg, #047857, #059669); color: #fff; box-shadow: 0 3px 12px rgba(4,120,87,0.25); }
+.btn-primary:hover:not(:disabled) { transform: translateY(-1px); }
+.btn-soft { background: #fff; border: 2px solid #cfe6d7; color: #36513f; }
+.btn-soft:hover:not(:disabled) { border-color: #6cbf8e; }
+
+.summary { font-size: 14px; font-weight: 700; color: #36513f; margin-top: 10px; }
+.summary strong { color: #047857; }
+
+/* System note panel */
+.note-panel {
+  text-align: left; background: linear-gradient(135deg, #f0fbf5, #fdf9ec); border: 1px solid #d8ecdf;
+  border-radius: 14px; padding: 16px 18px; margin-top: 16px;
+}
+.note-panel h3 { margin: 0 0 8px; font-size: 14px; font-weight: 800; color: #047857; letter-spacing: 0.3px; }
+.note-panel ul { margin: 0; padding-left: 18px; }
+.note-panel li { font-size: 13.5px; color: #2c4035; line-height: 1.5; margin-bottom: 6px; }
+.note-panel li:last-child { margin-bottom: 0; }
+.note-panel b { color: #b45309; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; font-weight: 700; }
+
+.bottom-bar { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.key-hint { font-size: 11px; color: #a3b5aa; margin-top: 12px; }
+.key-hint kbd { display: inline-block; background: #e2efe8; color: #047857; border-radius: 4px; padding: 1px 6px; font-size: 10px; font-family: inherit; font-weight: 700; border: 1px solid #cfe6d7; margin: 0 1px; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="leaves" id="leaves"></div>
+
+<!-- START SCREEN -->
+<div id="screen-start" class="card">
+  <div class="logo-mark">Ejercicio integrado</div>
+  <h1>Tabla de verbos</h1>
+  <p class="subtitle">Conjuga un verbo en las 16 formas para un mismo sujeto y mira c&oacute;mo cambia el significado</p>
+  <div class="instructions">
+    <p><strong>Instrucciones:</strong> Elige un verbo y una persona. Vas a rellenar las 16 formas de ese verbo para ese sujeto, desde el infinitivo hasta el pluscuamperfecto de subjuntivo.</p>
+    <p>Al finalizar, practica los verbos que no hayas contestado correctamente.</p>
+  </div>
+
+  <div class="sel-block">
+    <div class="sel-label">Verbo</div>
+    <div class="pill-row" id="verb-pills"></div>
+  </div>
+
+  <div class="sel-block">
+    <div class="sel-label">Persona (para las formas personales)</div>
+    <div class="pill-row" id="person-pills">
+      <button class="pill" data-person="0">yo</button>
+      <button class="pill" data-person="1">t&uacute;</button>
+      <button class="pill" data-person="2">&eacute;l / ella</button>
+      <button class="pill" data-person="3">nosotros</button>
+      <button class="pill" data-person="4">ellos / ellas</button>
+      <button class="pill active" data-person="random">Aleatorio</button>
+    </div>
+  </div>
+
+  <div class="sel-block">
+    <div class="sel-label">Acentos</div>
+    <div class="pill-row" id="accent-pills">
+      <button class="pill active" data-accent="strict">Exigir acentos</button>
+      <button class="pill" data-accent="lenient">Ser flexible</button>
+    </div>
+  </div>
+
+  <button class="btn-start" onclick="startTable()">&#9889; Empezar la tabla</button>
+</div>
+
+<!-- PLAY SCREEN -->
+<div id="screen-play" class="card hidden">
+  <div class="play-head">
+    <div class="head-verb">
+      <div class="hv-inf" id="hv-inf">tener</div>
+      <div class="hv-gloss" id="hv-gloss">to have</div>
+    </div>
+    <div class="person-badge" id="person-badge">yo</div>
+  </div>
+  <p class="head-note">Las formas no personales (infinitivo, gerundio, participio) no cambian con la persona.</p>
+
+  <div id="table-host"></div>
+
+  <div class="control-bar">
+    <button class="btn-ctrl btn-primary" id="btn-check" onclick="checkTable()">Comprobar</button>
+    <button class="btn-ctrl btn-soft" id="btn-reveal" onclick="revealAll()">Mostrar respuestas</button>
+  </div>
+  <div class="summary" id="summary">Dominadas: <strong>0</strong> de 15</div>
+
+  <div class="note-panel hidden" id="note-panel"></div>
+
+  <div class="bottom-bar">
+    <button class="btn-ctrl btn-soft" onclick="newTable()">&#x21bb; Otra tabla</button>
+    <button class="btn-ctrl btn-soft" onclick="goStart()">Cambiar verbo o persona</button>
+  </div>
+  <p class="key-hint"><kbd>Enter</kbd> salta a la siguiente casilla</p>
+</div>
+
+<script>
+/* ---------- Verb bank (verified conjugations) ----------
+   Persons: 0=yo, 1=tú, 2=él/ella, 3=nosotros, 4=ellos/ellas */
+var VERBS = [
+  { inf:'hablar', en:'to speak', reg:true, ger:'hablando', par:'hablado',
+    presente:['hablo','hablas','habla','hablamos','hablan'],
+    preterito:['hablé','hablaste','habló','hablamos','hablaron'],
+    imperfecto:['hablaba','hablabas','hablaba','hablábamos','hablaban'],
+    futuro:['hablaré','hablarás','hablará','hablaremos','hablarán'],
+    condicional:['hablaría','hablarías','hablaría','hablaríamos','hablarían'],
+    presubj:['hable','hables','hable','hablemos','hablen'],
+    impsubj:['hablara','hablaras','hablara','habláramos','hablaran'] },
+  { inf:'comer', en:'to eat', reg:true, ger:'comiendo', par:'comido',
+    presente:['como','comes','come','comemos','comen'],
+    preterito:['comí','comiste','comió','comimos','comieron'],
+    imperfecto:['comía','comías','comía','comíamos','comían'],
+    futuro:['comeré','comerás','comerá','comeremos','comerán'],
+    condicional:['comería','comerías','comería','comeríamos','comerían'],
+    presubj:['coma','comas','coma','comamos','coman'],
+    impsubj:['comiera','comieras','comiera','comiéramos','comieran'] },
+  { inf:'vivir', en:'to live', reg:true, ger:'viviendo', par:'vivido',
+    presente:['vivo','vives','vive','vivimos','viven'],
+    preterito:['viví','viviste','vivió','vivimos','vivieron'],
+    imperfecto:['vivía','vivías','vivía','vivíamos','vivían'],
+    futuro:['viviré','vivirás','vivirá','viviremos','vivirán'],
+    condicional:['viviría','vivirías','viviría','viviríamos','vivirían'],
+    presubj:['viva','vivas','viva','vivamos','vivan'],
+    impsubj:['viviera','vivieras','viviera','viviéramos','vivieran'] },
+  { inf:'tener', en:'to have', reg:false, ger:'teniendo', par:'tenido',
+    presente:['tengo','tienes','tiene','tenemos','tienen'],
+    preterito:['tuve','tuviste','tuvo','tuvimos','tuvieron'],
+    imperfecto:['tenía','tenías','tenía','teníamos','tenían'],
+    futuro:['tendré','tendrás','tendrá','tendremos','tendrán'],
+    condicional:['tendría','tendrías','tendría','tendríamos','tendrían'],
+    presubj:['tenga','tengas','tenga','tengamos','tengan'],
+    impsubj:['tuviera','tuvieras','tuviera','tuviéramos','tuvieran'] },
+  { inf:'hacer', en:'to do, to make', reg:false, ger:'haciendo', par:'hecho',
+    presente:['hago','haces','hace','hacemos','hacen'],
+    preterito:['hice','hiciste','hizo','hicimos','hicieron'],
+    imperfecto:['hacía','hacías','hacía','hacíamos','hacían'],
+    futuro:['haré','harás','hará','haremos','harán'],
+    condicional:['haría','harías','haría','haríamos','harían'],
+    presubj:['haga','hagas','haga','hagamos','hagan'],
+    impsubj:['hiciera','hicieras','hiciera','hiciéramos','hicieran'] },
+  { inf:'ir', en:'to go', reg:false, ger:'yendo', par:'ido',
+    presente:['voy','vas','va','vamos','van'],
+    preterito:['fui','fuiste','fue','fuimos','fueron'],
+    imperfecto:['iba','ibas','iba','íbamos','iban'],
+    futuro:['iré','irás','irá','iremos','irán'],
+    condicional:['iría','irías','iría','iríamos','irían'],
+    presubj:['vaya','vayas','vaya','vayamos','vayan'],
+    impsubj:['fuera','fueras','fuera','fuéramos','fueran'] },
+  { inf:'ser', en:'to be', reg:false, ger:'siendo', par:'sido',
+    presente:['soy','eres','es','somos','son'],
+    preterito:['fui','fuiste','fue','fuimos','fueron'],
+    imperfecto:['era','eras','era','éramos','eran'],
+    futuro:['seré','serás','será','seremos','serán'],
+    condicional:['sería','serías','sería','seríamos','serían'],
+    presubj:['sea','seas','sea','seamos','sean'],
+    impsubj:['fuera','fueras','fuera','fuéramos','fueran'] },
+  { inf:'poder', en:'to be able to, can', reg:false, ger:'pudiendo', par:'podido',
+    presente:['puedo','puedes','puede','podemos','pueden'],
+    preterito:['pude','pudiste','pudo','pudimos','pudieron'],
+    imperfecto:['podía','podías','podía','podíamos','podían'],
+    futuro:['podré','podrás','podrá','podremos','podrán'],
+    condicional:['podría','podrías','podría','podríamos','podrían'],
+    presubj:['pueda','puedas','pueda','podamos','puedan'],
+    impsubj:['pudiera','pudieras','pudiera','pudiéramos','pudieran'] },
+  { inf:'decir', en:'to say, to tell', reg:false, ger:'diciendo', par:'dicho',
+    presente:['digo','dices','dice','decimos','dicen'],
+    preterito:['dije','dijiste','dijo','dijimos','dijeron'],
+    imperfecto:['decía','decías','decía','decíamos','decían'],
+    futuro:['diré','dirás','dirá','diremos','dirán'],
+    condicional:['diría','dirías','diría','diríamos','dirían'],
+    presubj:['diga','digas','diga','digamos','digan'],
+    impsubj:['dijera','dijeras','dijera','dijéramos','dijeran'] },
+  { inf:'ver', en:'to see', reg:false, ger:'viendo', par:'visto',
+    presente:['veo','ves','ve','vemos','ven'],
+    preterito:['vi','viste','vio','vimos','vieron'],
+    imperfecto:['veía','veías','veía','veíamos','veían'],
+    futuro:['veré','verás','verá','veremos','verán'],
+    condicional:['vería','verías','vería','veríamos','verían'],
+    presubj:['vea','veas','vea','veamos','vean'],
+    impsubj:['viera','vieras','viera','viéramos','vieran'] },
+  { inf:'poner', en:'to put, to place', reg:false, ger:'poniendo', par:'puesto',
+    presente:['pongo','pones','pone','ponemos','ponen'],
+    preterito:['puse','pusiste','puso','pusimos','pusieron'],
+    imperfecto:['ponía','ponías','ponía','poníamos','ponían'],
+    futuro:['pondré','pondrás','pondrá','pondremos','pondrán'],
+    condicional:['pondría','pondrías','pondría','pondríamos','pondrían'],
+    presubj:['ponga','pongas','ponga','pongamos','pongan'],
+    impsubj:['pusiera','pusieras','pusiera','pusiéramos','pusieran'] },
+  { inf:'querer', en:'to want, to love', reg:false, ger:'queriendo', par:'querido',
+    presente:['quiero','quieres','quiere','queremos','quieren'],
+    preterito:['quise','quisiste','quiso','quisimos','quisieron'],
+    imperfecto:['quería','querías','quería','queríamos','querían'],
+    futuro:['querré','querrás','querrá','querremos','querrán'],
+    condicional:['querría','querrías','querría','querríamos','querrían'],
+    presubj:['quiera','quieras','quiera','queramos','quieran'],
+    impsubj:['quisiera','quisieras','quisiera','quisiéramos','quisieran'] }
+];
+
+var HABER = {
+  presente:['he','has','ha','hemos','han'],
+  imperfecto:['había','habías','había','habíamos','habían'],
+  futuro:['habré','habrás','habrá','habremos','habrán'],
+  condicional:['habría','habrías','habría','habríamos','habrían'],
+  presubj:['haya','hayas','haya','hayamos','hayan'],
+  impsubj:['hubiera','hubieras','hubiera','hubiéramos','hubieran']
+};
+var HUBIESE = ['hubiese','hubieses','hubiese','hubiésemos','hubiesen'];
+
+var FORMS = [
+  { key:'infinitivo',          label:'Infinitivo',                 sub:'forma base',        cat:'base', person:false },
+  { key:'gerundio',            label:'Gerundio',                   sub:'',                  cat:'base', person:false },
+  { key:'participio',          label:'Participio',                 sub:'',                  cat:'base', person:false },
+  { key:'presente',            label:'Presente',                   sub:'',                  cat:'simple', person:true },
+  { key:'pretérito',           label:'Pretérito',                  sub:'',                  cat:'simple', person:true },
+  { key:'imperfecto',          label:'Imperfecto',                 sub:'',                  cat:'simple', person:true },
+  { key:'futuro',              label:'Futuro',                     sub:'',                  cat:'simple', person:true },
+  { key:'condicional',         label:'Condicional',                sub:'',                  cat:'simple', person:true },
+  { key:'pres. perfecto ind.', label:'Pretérito perfecto',         sub:'haber + part.',     cat:'comp', person:true },
+  { key:'pluscuamperf. ind.',  label:'Pluscuamperfecto',           sub:'haber + part.',     cat:'comp', person:true },
+  { key:'futuro perfecto',     label:'Futuro perfecto',            sub:'haber + part.',     cat:'comp', person:true },
+  { key:'cond. perfecto',      label:'Condicional perfecto',       sub:'haber + part.',     cat:'comp', person:true },
+  { key:'pres. subjuntivo',    label:'Presente de subjuntivo',     sub:'',                  cat:'subj', person:true },
+  { key:'imperf. subjuntivo',  label:'Imperfecto de subjuntivo',   sub:'-ra / -se',         cat:'subj', person:true },
+  { key:'pres. perf. subj.',   label:'Pretérito perf. de subj.',   sub:'haber + part.',     cat:'subj', person:true },
+  { key:'pluscuamperf. subj.', label:'Pluscuamperf. de subj.',     sub:'haber + part.',     cat:'subj', person:true }
+];
+
+var SIMPLE_PROP = { 'presente':'presente','pretérito':'preterito','imperfecto':'imperfecto','futuro':'futuro','condicional':'condicional','pres. subjuntivo':'presubj','imperf. subjuntivo':'impsubj' };
+var COMPOUND_AUX = { 'pres. perfecto ind.':'presente','pluscuamperf. ind.':'imperfecto','futuro perfecto':'futuro','cond. perfecto':'condicional','pres. perf. subj.':'presubj','pluscuamperf. subj.':'impsubj' };
+var PERSONS = ['yo','tú','él / ella','nosotros','ellos / ellas'];
+
+function raToSe(f,p){
+  if(p===3) return f.slice(0,-5)+'semos';
+  if(p===1) return f.slice(0,-3)+'ses';
+  if(p===4) return f.slice(0,-3)+'sen';
+  return f.slice(0,-2)+'se';
+}
+function buildForm(verb, key, p){
+  var out={answer:'',alts:[]};
+  if(key==='infinitivo'){ out.answer=verb.inf; return out; }
+  if(key==='gerundio'){ out.answer=verb.ger; return out; }
+  if(key==='participio'){ out.answer=verb.par; return out; }
+  if(SIMPLE_PROP[key]){
+    out.answer = verb[SIMPLE_PROP[key]][p];
+    if(key==='imperf. subjuntivo') out.alts.push(raToSe(out.answer,p));
+    return out;
+  }
+  if(COMPOUND_AUX[key]){
+    out.answer = HABER[COMPOUND_AUX[key]][p] + ' ' + verb.par;
+    if(key==='pluscuamperf. subj.') out.alts.push(HUBIESE[p] + ' ' + verb.par);
+    return out;
+  }
+  return out;
+}
+
+function normalize(s){
+  return s.toLowerCase().trim().replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u').replace(/ü/g,'u').replace(/\s+/g,' ');
+}
+function clean(s){ return s.toLowerCase().trim().replace(/\s+/g,' '); }
+function evaluate(val, answer, alts){
+  var pool=[answer].concat(alts||[]);
+  if(pool.map(clean).indexOf(clean(val))>=0) return 'exact';
+  if(pool.map(normalize).indexOf(normalize(val))>=0) return 'accent';
+  return 'wrong';
+}
+
+/* ---------- State ---------- */
+var selVerb='random', selPerson='random', accentMode='strict';
+var verb=null, personIdx=0, fillable=0, accentCounted={};
+
+/* Falling leaves */
+(function(){
+  var c=document.getElementById('leaves');
+  for(var i=0;i<16;i++){
+    var l=document.createElement('div'); l.className='leaf';
+    var s=Math.random()*9+5; l.style.width=s+'px'; l.style.height=s+'px';
+    l.style.left=Math.random()*100+'%'; l.style.animationDuration=(Math.random()*14+11)+'s'; l.style.animationDelay=(Math.random()*13)+'s';
+    c.appendChild(l);
+  }
+})();
+
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+function hide(id){ document.getElementById(id).classList.add('hidden'); }
+
+/* Build verb pills */
+(function(){
+  var host=document.getElementById('verb-pills');
+  var rand=document.createElement('button'); rand.className='pill active'; rand.setAttribute('data-verb','random'); rand.textContent='Aleatorio';
+  host.appendChild(rand);
+  VERBS.forEach(function(v){
+    var b=document.createElement('button'); b.className='pill verb-pill'; b.setAttribute('data-verb',v.inf); b.textContent=v.inf;
+    host.appendChild(b);
+  });
+})();
+
+document.getElementById('verb-pills').addEventListener('click', function(e){
+  var b=e.target.closest('.pill'); if(!b) return;
+  this.querySelectorAll('.pill').forEach(function(x){x.classList.remove('active');});
+  b.classList.add('active'); selVerb=b.getAttribute('data-verb');
+});
+document.getElementById('person-pills').addEventListener('click', function(e){
+  var b=e.target.closest('.pill'); if(!b) return;
+  this.querySelectorAll('.pill').forEach(function(x){x.classList.remove('active');});
+  b.classList.add('active'); selPerson=b.getAttribute('data-person');
+});
+document.getElementById('accent-pills').addEventListener('click', function(e){
+  var b=e.target.closest('.pill'); if(!b) return;
+  this.querySelectorAll('.pill').forEach(function(x){x.classList.remove('active');});
+  b.classList.add('active'); accentMode=b.getAttribute('data-accent');
+});
+
+function goStart(){ hide('screen-play'); show('screen-start'); }
+
+function resolveVerb(){ return selVerb==='random' ? VERBS[Math.floor(Math.random()*VERBS.length)] : VERBS.filter(function(v){return v.inf===selVerb;})[0]; }
+function resolvePerson(){ return selPerson==='random' ? Math.floor(Math.random()*5) : parseInt(selPerson,10); }
+
+function startTable(){ hide('screen-start'); show('screen-play'); buildAndRender(resolveVerb(), resolvePerson()); }
+function newTable(){ buildAndRender(resolveVerb(), resolvePerson()); }
+
+function buildAndRender(v, p){
+  verb=v; personIdx=p; accentCounted={};
+  document.getElementById('hv-inf').textContent=v.inf;
+  document.getElementById('hv-gloss').textContent=v.en;
+  document.getElementById('person-badge').textContent=PERSONS[p];
+
+  var cats={base:'Formas no personales',simple:'Indicativo simple',comp:'Indicativo compuesto',subj:'Subjuntivo'};
+  var catClass={base:'st-base',simple:'st-simple',comp:'st-comp',subj:'st-subj'};
+  var order=['base','simple','comp','subj'];
+  var html=''; fillable=0;
+
+  order.forEach(function(cat){
+    html+='<div class="section"><div class="section-title '+catClass[cat]+'">'+cats[cat]+'</div>';
+    FORMS.filter(function(f){return f.cat===cat;}).forEach(function(f){
+      var built=buildForm(v,f.key,p);
+      var given=(f.key==='infinitivo');
+      if(!given) fillable++;
+      var sub=f.sub?'<small>'+f.sub+'</small>':'';
+      var placeholder=given?'':'';
+      html+='<div class="trow" data-key="'+f.key+'" data-answer="'+esc(built.answer)+'" data-alts="'+esc((built.alts||[]).join('|'))+'">'+
+        '<div class="tlabel">'+f.label+sub+'</div>'+
+        '<div class="tinput-wrap">'+
+          '<input class="tinput'+(given?' given':'')+'" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" '+
+            (given?('value="'+esc(built.answer)+'" disabled'):('placeholder="'+placeholder+'"'))+'>'+
+          '<span class="tflag"></span>'+
+        '</div>'+
+        '<div class="tcorrect"></div>'+
+      '</div>';
+    });
+    html+='</div>';
+  });
+  document.getElementById('table-host').innerHTML=html;
+
+  document.getElementById('btn-check').disabled=false;
+  document.getElementById('btn-reveal').disabled=false;
+  hide('note-panel');
+  updateSummary();
+  wireInputs();
+  var first=document.querySelector('.trow[data-key="gerundio"] .tinput');
+  if(first) setTimeout(function(){first.focus();},40);
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function wireInputs(){
+  var inputs=Array.prototype.slice.call(document.querySelectorAll('.tinput:not(.given)'));
+  inputs.forEach(function(inp,i){
+    inp.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){
+        e.preventDefault();
+        var next=inputs[i+1];
+        if(next && !next.disabled) next.focus();
+        else checkTable();
+      }
+    });
+  });
+}
+
+function checkTable(){
+  var rows=document.querySelectorAll('.trow');
+  rows.forEach(function(row){
+    var key=row.getAttribute('data-key');
+    if(key==='infinitivo') return;
+    var inp=row.querySelector('.tinput');
+    if(inp.disabled) return; /* already mastered/locked */
+    var flag=row.querySelector('.tflag');
+    var val=inp.value;
+    inp.classList.remove('ok','accent','bad'); flag.className='tflag'; flag.textContent='';
+    if(clean(val)===''){ return; } /* leave blank cells untouched */
+
+    var answer=row.getAttribute('data-answer');
+    var alts=(row.getAttribute('data-alts')||'').split('|').filter(Boolean);
+    var verdict=evaluate(val, answer, alts);
+
+    if(verdict==='exact' || (verdict==='accent' && accentMode==='lenient')){
+      inp.classList.add(verdict==='accent'?'accent':'ok'); inp.disabled=true;
+      flag.className='tflag '+(verdict==='accent'?'accent':'ok'); flag.textContent=verdict==='accent'?'~':'\u2713';
+    } else if(verdict==='accent'){
+      inp.classList.add('accent'); flag.className='tflag accent'; flag.textContent='~';
+      if(!accentCounted[key]) accentCounted[key]=true;
+      inp.classList.add('shake'); setTimeout(function(){inp.classList.remove('shake');},350);
+    } else {
+      inp.classList.add('bad'); flag.className='tflag bad'; flag.textContent='\u2717';
+      inp.classList.add('shake'); setTimeout(function(){inp.classList.remove('shake');},350);
+    }
+  });
+  updateSummary();
+  if(masteredCount()>=fillable) finish(true);
+}
+
+function revealAll(){
+  var rows=document.querySelectorAll('.trow');
+  rows.forEach(function(row){
+    var key=row.getAttribute('data-key');
+    if(key==='infinitivo') return;
+    var inp=row.querySelector('.tinput');
+    var flag=row.querySelector('.tflag');
+    var corr=row.querySelector('.tcorrect');
+    var answer=row.getAttribute('data-answer');
+    var alts=(row.getAttribute('data-alts')||'').split('|').filter(Boolean);
+    if(inp.disabled && inp.classList.contains('ok')) return; /* keep mastered cells as the student's own correct answer */
+    if(inp.disabled && inp.classList.contains('accent')) return;
+    inp.classList.remove('bad','accent'); inp.classList.add('revealed'); inp.disabled=true;
+    inp.value=answer;
+    flag.className='tflag'; flag.textContent='';
+    corr.textContent = alts.length ? '(tambi\u00e9n: '+alts.join(', ')+')' : '';
+  });
+  finish(false);
+}
+
+function masteredCount(){
+  var n=0;
+  document.querySelectorAll('.trow').forEach(function(row){
+    if(row.getAttribute('data-key')==='infinitivo') return;
+    var inp=row.querySelector('.tinput');
+    if(inp.disabled && (inp.classList.contains('ok')||inp.classList.contains('accent'))) n++;
+  });
+  return n;
+}
+function updateSummary(){
+  document.getElementById('summary').innerHTML='Dominadas: <strong>'+masteredCount()+'</strong> de '+fillable;
+}
+
+function finish(allRight){
+  document.getElementById('btn-check').disabled=true;
+  document.getElementById('btn-reveal').disabled=true;
+  document.querySelectorAll('.tinput:not(.given)').forEach(function(inp){ inp.disabled=true; });
+  showNote(allRight);
+  document.getElementById('note-panel').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function showNote(allRight){
+  var v=verb;
+  var root=v.futuro[0].replace(/é$/,'');
+  var pret3=v.preterito[4];
+  var stem=pret3.replace(/ron$/,'');
+  var lead = allRight
+    ? '<h3>\u00a1Tabla completa! Mira el sistema:</h3>'
+    : '<h3>El sistema detr\u00e1s de la tabla:</h3>';
+  var html = lead + '<ul>'+
+    '<li>Los seis tiempos compuestos (cuatro de indicativo y dos de subjuntivo) usan el mismo participio, <b>'+v.par+'</b>, con el verbo auxiliar <i>haber</i>. Si tienes el participio, ya tienes la mitad de la tabla.</li>'+
+    '<li>El imperfecto de subjuntivo sale del pret\u00e9rito de <i>ellos</i>, <b>'+pret3+'</b>. Quitas <i>-ron</i> y a\u00f1ades <i>-ra</i> o <i>-se</i>: <b>'+stem+'ra</b> / <b>'+stem+'se</b>.</li>'+
+    '<li>El futuro y el condicional comparten la misma ra\u00edz, <b>'+root+'-</b>: <b>'+v.futuro[0]+'</b> y <b>'+v.condicional[0]+'</b>.</li>'+
+  '</ul>';
+  var panel=document.getElementById('note-panel');
+  panel.innerHTML=html; show('note-panel');
+}
+</script>
+</body>
+</html>
